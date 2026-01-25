@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happiest Birthday Ayesha</title>
+    <!-- Importing elegant fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@300;600&family=Playfair+Display:ital,wght@1,600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Custom Styles & Animations */
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: "Nunito", sans-serif;
+        /* EDIT BACKGROUND IMAGE HERE: Replace 'radial-gradient' with 'url(your-image-link.jpg)' */
+        background: radial-gradient(
+          circle at center,
+          #fff0f5,
+          #ffe4e1,
+          #ffc1cc
+        );
+        background-size: cover;
+        background-position: center;
+        color: #8b4a55;
+      }
+
+      /* Large Background Text */
+      .bg-name-text {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: "Dancing Script", cursive;
+        font-size: 20vw;
+        color: rgba(214, 51, 108, 0.05); /* Very faint and elegant */
+        white-space: nowrap;
+        z-index: 0;
+        pointer-events: none;
+        user-select: none;
+        letter-spacing: 1rem;
+      }
+
+      /* Ambient Background Elements */
+      .bg-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* 1. UPWARD FLOATING HEARTS (Slower) */
+      .float-up {
+        position: absolute;
+        bottom: -20px;
+        color: rgba(255, 182, 193, 0.6);
+        animation: floatUpSlow var(--speed) linear infinite;
+        z-index: 0;
+      }
+
+      @keyframes floatUpSlow {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 0;
+        }
+        20% {
+          opacity: 0.6;
+        }
+        80% {
+          opacity: 0.6;
+        }
+        100% {
+          transform: translateY(-110vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* 2. RAINING HEARTS (Faster) */
+      .heart-rain {
+        position: absolute;
+        top: -20px;
+        color: rgba(214, 51, 108, 0.4);
+        animation: rainDown var(--speed) linear infinite;
+        z-index: 2; /* In front of text but behind interactive name */
+      }
+
+      @keyframes rainDown {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.4;
+        }
+        90% {
+          opacity: 0.4;
+        }
+        100% {
+          transform: translateY(110vh) rotate(180deg);
+          opacity: 0;
+        }
+      }
+
+      /* Music Controls */
+      #music-control {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.8);
+        border: 2px solid #ff9eb5;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        color: #d6336c;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      /* The Start Container */
+      #start-dove-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        cursor: pointer;
+        transition:
+          transform 0.3s ease,
+          opacity 0.5s ease;
+        z-index: 50;
+      }
+
+      .start-avatar {
+        font-family: "Dancing Script", cursive;
+        font-size: 3.5rem;
+        color: #d6336c;
+        background: rgba(255, 255, 255, 0.9);
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 0 25px rgba(255, 105, 180, 0.5);
+        animation: floatHero 3s ease-in-out infinite;
+        border: 4px solid #ff9eb5;
+      }
+
+      @keyframes floatHero {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+      }
+
+      .start-text {
+        margin-top: 15px;
+        font-family: "Dancing Script", cursive;
+        font-size: 1.8rem;
+        color: #d65a72;
+        text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        opacity: 0;
+        animation: fadeIn 2s ease forwards 0.5s;
+      }
+
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+
+      #journey-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        visibility: hidden;
+        display: flex;
+        align-items: center;
+      }
+
+      #path-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        z-index: 5;
+        overflow: visible;
+      }
+
+      path#journey-line {
+        fill: none;
+        stroke: #ff9eb5;
+        stroke-width: 4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        filter: drop-shadow(0 0 5px rgba(255, 182, 193, 0.8));
+      }
+
+      #flying-obj {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 20;
+        pointer-events: none;
+        display: none;
+        font-family: "Dancing Script", cursive;
+        font-weight: bold;
+        font-size: 1.8rem;
+        color: #d6336c;
+        background: rgba(255, 255, 255, 0.98);
+        padding: 10px 25px;
+        border-radius: 30px;
+        box-shadow: 0 5px 15px rgba(214, 51, 108, 0.4);
+        white-space: nowrap;
+        border: 2px solid #ffc1cc;
+      }
+
+      .milestone {
+        position: absolute;
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+        width: 280px;
+        padding: 18px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 18px;
+        box-shadow: 0 6px 20px rgba(255, 182, 193, 0.4);
+        backdrop-filter: blur(8px);
+        transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 10;
+        text-align: center;
+        border-left: 5px solid #ff9eb5;
+      }
+
+      .milestone.visible {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+
+      .milestone h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.15rem;
+        color: #d6336c;
+        margin-bottom: 5px;
+        line-height: 1.3;
+      }
+
+      .heart-icon {
+        color: #ff6b81;
+        font-size: 1.2rem;
+        margin-right: 5px;
+      }
+
+      #final-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: rgba(255, 240, 245, 0.98);
+        z-index: 100;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 2.5s ease;
+      }
+
+      #final-screen.visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .final-title {
+        font-family: "Dancing Script", cursive;
+        font-size: 4.5rem;
+        text-align: center;
+        background: linear-gradient(45deg, #ff6b81, #d6336c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+        padding: 0 20px;
+      }
+
+      @media (max-width: 600px) {
+        .milestone {
+          width: 220px;
+          padding: 12px;
+        }
+        .final-title {
+          font-size: 2.8rem;
+        }
+        .bg-name-text {
+          font-size: 30vw;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Large Background Text -->
+    <div class="bg-name-text">AYESHA</div>
+
+    <!-- Ambient Animations -->
+    <div class="bg-overlay" id="animation-layer"></div>
+
+    <audio id="bg-music" loop>
+      <source src="song.m4a" type="audio/mpeg" />
+    </audio>
+
+    <div id="music-control" onclick="toggleMusic()">
+      <i id="music-icon" class="fa-solid fa-music"></i>
+    </div>
+
+    <div id="start-dove-container" onclick="startJourney()">
+      <div class="start-avatar">Anwa</div>
+      <div class="start-text">Start Journey</div>
+    </div>
+
+    <div id="journey-container">
+      <svg id="path-svg"><path id="journey-line" d="" /></svg>
+      <div id="flying-obj">Anwa</div>
+    </div>
+
+    <div id="final-screen">
+      <h1 class="final-title">Happiest Birthday Ayesha</h1>
+      <div class="final-sub text-lg text-pink-700 italic">
+        May your journey be filled with endless love and joy.
+      </div>
+    </div>
+
+    <script>
+      // --- MILESTONE DATA ---
+      const milestones = [
+        { title: "Starting Journey", date: "", icon: "fa-star" },
+        {
+          title: "The day you were born",
+          date: "26 February 2005",
+          icon: "fa-baby",
+        },
+        {
+          title: "I saw you for the first time",
+          date: "16 January 2023",
+          icon: "fa-eye",
+        },
+        { title: "Culture Day", date: "", icon: "fa-music" },
+        {
+          title: "Ragging Day as a Teacher",
+          date: "",
+          icon: "fa-chalkboard-user",
+        },
+        { title: "First Interaction", date: "September", icon: "fa-comments" },
+        {
+          title: "Memorable Day",
+          date: "5 July 2025 ❤️",
+          icon: "fa-heart",
+          highlight: true,
+        },
+        {
+          title: "First Late Night Talk",
+          date: "September 2025",
+          icon: "fa-moon",
+        },
+        {
+          title: "Beginning of Our Bonding",
+          date: "November",
+          icon: "fa-link",
+        },
+        {
+          title: "My favorite month with calls & sharings",
+          date: "December",
+          icon: "fa-phone",
+        },
+        {
+          title: "Your efforts for me: wraps & chocolates",
+          date: "January",
+          icon: "fa-gift",
+        },
+        {
+          title: "You wished me for exams",
+          date: "February",
+          icon: "fa-pen-to-square",
+        },
+        {
+          title: "Your Birthday 🎂",
+          date: "26 February 2025",
+          icon: "fa-cake-candles",
+          highlight: true,
+        },
+        {
+          title: "My first visit at your home",
+          date: "Special Day",
+          icon: "fa-house-heart",
+        },
+        { title: "Our First Eid", date: "March", icon: "fa-moon-stars" },
+        {
+          title: "Welcoming you back from Islamabad",
+          date: "May",
+          icon: "fa-plane-arrival",
+        },
+        {
+          title: "Spending time alone for hours",
+          date: "August",
+          icon: "fa-hourglass",
+        },
+        {
+          title: "Felt like I came for the Rishta! 😂",
+          date: "September",
+          icon: "fa-ring",
+        },
+        {
+          title: "Spent time, bonding, and friendship",
+          date: "Throughout the year",
+          icon: "fa-user-group",
+        },
+        { title: "And counting now on…", date: "Forever", icon: "fa-infinity" },
+      ];
+
+      // --- BACKGROUND AMBIENCE LOGIC ---
+      function initAmbience() {
+        const layer = document.getElementById("animation-layer");
+        const hearts = ["❤️", "💖", "💗", "💕"];
+
+        // Generate Floating Up (Slow)
+        for (let i = 0; i < 15; i++) {
+          const h = document.createElement("div");
+          h.className = "float-up";
+          h.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+          h.style.left = Math.random() * 100 + "vw";
+          h.style.setProperty("--speed", Math.random() * 10 + 15 + "s");
+          h.style.animationDelay = Math.random() * 10 + "s";
+          h.style.fontSize = Math.random() * 15 + 15 + "px";
+          layer.appendChild(h);
+        }
+
+        // Generate Raining Down (Faster)
+        for (let i = 0; i < 20; i++) {
+          const h = document.createElement("div");
+          h.className = "heart-rain";
+          h.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+          h.style.left = Math.random() * 100 + "vw";
+          h.style.setProperty("--speed", Math.random() * 5 + 4 + "s");
+          h.style.animationDelay = Math.random() * 10 + "s";
+          h.style.fontSize = Math.random() * 10 + 10 + "px";
+          layer.appendChild(h);
+        }
+      }
+      initAmbience();
+
+      // --- CORE JOURNEY LOGIC ---
+      const startBtn = document.getElementById("start-dove-container");
+      const journeyContainer = document.getElementById("journey-container");
+      const pathSvg = document.getElementById("path-svg");
+      const journeyLine = document.getElementById("journey-line");
+      const flyingObj = document.getElementById("flying-obj");
+      const finalScreen = document.getElementById("final-screen");
+      const music = document.getElementById("bg-music");
+      const musicBtn = document.getElementById("music-control");
+      const musicIcon = document.getElementById("music-icon");
+
+      let pathLength = 0;
+      let screenW, screenH;
+      const moveSpeed = 1.8;
+
+      function toggleMusic() {
+        if (music.paused) {
+          music.play();
+          musicIcon.className = "fa-solid fa-music";
+        } else {
+          music.pause();
+          musicIcon.className = "fa-solid fa-volume-xmark";
+        }
+      }
+
+      function startJourney() {
+        music.volume = 0.4;
+        music.play().catch(() => {});
+        musicBtn.style.display = "flex";
+
+        startBtn.style.opacity = "0";
+        startBtn.style.pointerEvents = "none";
+
+        setTimeout(() => {
+          startBtn.style.display = "none";
+          journeyContainer.style.visibility = "visible";
+          createPath();
+          createMilestoneElements();
+          flyingObj.style.display = "block";
+          pathLength = journeyLine.getTotalLength();
+          journeyLine.style.strokeDasharray = pathLength;
+          journeyLine.style.strokeDashoffset = pathLength;
+          requestAnimationFrame(animate);
+        }, 500);
+      }
+
+      function createPath() {
+        screenW = window.innerWidth;
+        screenH = window.innerHeight;
+        const spacing = Math.max(screenW * 0.7, 350);
+        const totalWidth = spacing * milestones.length + screenW;
+
+        journeyContainer.style.width = `${totalWidth}px`;
+        pathSvg.style.width = `${totalWidth}px`;
+
+        const startY = screenH / 2;
+        const startX = screenW / 2;
+
+        let d = `M ${startX} ${startY}`;
+        let currentX = startX;
+
+        for (let i = 0; i < milestones.length; i++) {
+          if (i > 0) currentX += spacing;
+          milestones[i].x = currentX;
+          milestones[i].y = startY;
+
+          d += ` L ${currentX - 12} ${startY}`;
+          d += ` C ${currentX - 25} ${startY - 28}, ${currentX - 5} ${startY - 28}, ${currentX} ${startY - 12}`;
+          d += ` C ${currentX + 5} ${startY - 28}, ${currentX + 25} ${startY - 28}, ${currentX + 12} ${startY}`;
+          d += ` C ${currentX + 18} ${startY + 22}, ${currentX - 18} ${startY + 22}, ${currentX - 12} ${startY}`;
+          d += ` M ${currentX + 12} ${startY}`;
+        }
+        d += ` L ${currentX + 600} ${startY}`;
+        journeyLine.setAttribute("d", d);
+      }
+
+      function createMilestoneElements() {
+        milestones.forEach((m, index) => {
+          const el = document.createElement("div");
+          el.className = "milestone";
+          el.id = `milestone-${index}`;
+          const iconHTML = `<i class="fa-solid ${m.icon || "fa-heart"} heart-icon"></i>`;
+          const dateHTML = m.date
+            ? `<div class="text-xs font-bold text-pink-500 mb-1 uppercase tracking-wider">${m.date}</div>`
+            : "";
+          const style = m.highlight ? "color: #ff0055; font-weight: bold;" : "";
+          el.innerHTML = `${dateHTML}<h3 style="${style}">${iconHTML} ${m.title}</h3>`;
+          journeyContainer.appendChild(el);
+        });
+      }
+
+      let progress = 0;
+      let activeMilestoneIndex = 0;
+
+      function animate() {
+        progress += moveSpeed;
+        if (progress > pathLength) {
+          progress = pathLength;
+          endJourney();
+          return;
+        }
+
+        journeyLine.style.strokeDashoffset = pathLength - progress;
+        const point = journeyLine.getPointAtLength(progress);
+        flyingObj.style.transform = `translate(${point.x - flyingObj.offsetWidth / 2}px, ${point.y - flyingObj.offsetHeight / 2}px)`;
+
+        const targetCameraX = point.x - screenW / 2;
+        journeyContainer.style.transform = `translateX(-${Math.max(0, targetCameraX)}px)`;
+
+        if (activeMilestoneIndex < milestones.length) {
+          const target = milestones[activeMilestoneIndex];
+          if (Math.abs(point.x - target.x) < 30 && point.x >= target.x - 15) {
+            showMilestone(activeMilestoneIndex, target.x, target.y);
+            activeMilestoneIndex++;
+          }
+        }
+        requestAnimationFrame(animate);
+      }
+
+      function showMilestone(index, x, y) {
+        const el = document.getElementById(`milestone-${index}`);
+        if (!el || el.classList.contains("visible")) return;
+
+        const isTop = index % 2 === 0;
+        el.style.left = `${x - el.offsetWidth / 2}px`;
+        if (isTop) {
+          el.style.top = `${y - el.offsetHeight - 60}px`;
+          el.style.transformOrigin = "bottom center";
+        } else {
+          el.style.top = `${y + 60}px`;
+          el.style.transformOrigin = "top center";
+        }
+        el.classList.add("visible");
+        createHeartExplosion(x, y);
+      }
+
+      function createHeartExplosion(x, y) {
+        for (let i = 0; i < 12; i++) {
+          const heart = document.createElement("div");
+          heart.innerHTML = "❤";
+          heart.style.position = "absolute";
+          heart.style.left = x + "px";
+          heart.style.top = y + "px";
+          heart.style.color = "#ff6b81";
+          heart.style.fontSize = Math.random() * 20 + 12 + "px";
+          heart.style.transition =
+            "transform 1.2s ease-out, opacity 1.2s ease-out";
+          heart.style.zIndex = "30";
+          journeyContainer.appendChild(heart);
+          setTimeout(() => {
+            const angle = Math.random() * 360;
+            const v = Math.random() * 80 + 30;
+            heart.style.transform = `translate(${Math.cos(angle) * v}px, ${Math.sin(angle) * v}px) scale(0)`;
+            heart.style.opacity = 0;
+          }, 50);
+          setTimeout(() => heart.remove(), 1300);
+        }
+      }
+
+      function endJourney() {
+        journeyContainer.style.transition = "opacity 1.5s ease";
+        journeyContainer.style.opacity = "0";
+        setTimeout(() => {
+          journeyContainer.style.display = "none";
+          finalScreen.classList.add("visible");
+          // Ending Heart Rain
+          setInterval(() => {
+            const heart = document.createElement("div");
+            heart.className = "heart-rain";
+            heart.innerHTML = Math.random() > 0.8 ? "Anwa" : "❤️";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.setProperty("--speed", "4s");
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 4000);
+          }, 150);
+        }, 1500);
+      }
+    </script>
+  </body>
+</html>
